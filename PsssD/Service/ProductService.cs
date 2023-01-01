@@ -68,11 +68,7 @@ namespace PsssD.Service
 
         }
 
-        //public IEnumerable<Product> Get()
-        //{
-        // //return (IEnumerable<Product>)_dbContext.Products.GroupBy(x => x.ProductName).Select(x => new {x.Key,total=x.Select(y=>y.ProductId).Count()});
-
-        //}
+        
     }
 }
 
