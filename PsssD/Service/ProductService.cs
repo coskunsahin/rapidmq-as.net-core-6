@@ -55,15 +55,15 @@ namespace PsssD.Service
                             });
 
 
-            return results1.ToList();
-            var groupJoin = _.GroupJoin(studentList,  //inner sequence
-                                std => std.StandardID, //outerKeySelector 
-                                s => s.StandardID,     //innerKeySelector
-                                (std, studentsGroup) => new // resultSelector 
-                                {
-                                    Students = studentsGroup,
-                                    StandarFulldName = std.StandardName
-                                });
+            //return results1.ToList();
+            //var groupJoin = _.GroupJoin(studentList,  //inner sequence
+            //                    std => std.StandardID, //outerKeySelector 
+            //                    s => s.StandardID,     //innerKeySelector
+            //                    (std, studentsGroup) => new // resultSelector 
+            //                    {
+            //                        Students = studentsGroup,
+            //                        StandarFulldName = std.StandardName
+            //                    });
 
 
         }
