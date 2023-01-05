@@ -8,6 +8,6 @@
         public Product UpdateProduct(Product product);
         public bool DeleteProduct(int Id);
 
-        public IList<Product> Get();
+      
     }
 }

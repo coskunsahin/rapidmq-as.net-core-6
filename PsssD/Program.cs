@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using PsssD;
 using PsssD.RabbitMQ;
 using PsssD.Service;
 using System.Configuration;
+using System.Xml.Linq;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,5 +34,16 @@ if (app.Environment.IsDevelopment())
 }
 app.UseHttpsRedirection();
 app.UseAuthorization();
+
+app.MapGet("/admin", ([FromHeader(Name = "X-Api-Key")] string apiKey) =>
+{
+    if (apiKey == "SuperSecretApiKey")
+    {
+        return Results.Ok("Hi admin!");
+    }
+
+    return Results.Unauthorized();
+});
+
 app.MapControllers();
 app.Run();
