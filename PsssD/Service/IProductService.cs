@@ -1,4 +1,6 @@
-﻿namespace PsssD.Service
+﻿using System.Collections;
+
+namespace PsssD.Service
 {
     public interface IProductService
     {
@@ -8,6 +10,6 @@
         public Product UpdateProduct(Product product);
         public bool DeleteProduct(int Id);
 
-      
+        public IEnumerable GetValues();
     }
 }

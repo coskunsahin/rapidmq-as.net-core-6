@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PsssD.RabbitMQ;
 using PsssD.Service;
+using System.Collections;
 
 namespace PsssD.Controllers
 {
@@ -48,10 +49,13 @@ namespace PsssD.Controllers
         {
             return productService.DeleteProduct(Id);
         }
-        [HttpGet("get")]
-        public IList<Product> Get()
+        [HttpGet("List")]
+        public IEnumerable GetValues()
         {
-            return productService.Get();
+            var productList = productService.GetValues();
+            
+            return productList;
         }
+
     }
 }

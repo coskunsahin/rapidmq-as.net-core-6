@@ -8,73 +8,73 @@ using Xunit;
 
 namespace rapidmq_as.net_core_6E.mq.Tests
 {
-    internal record Book(int BookId, string Title);
+    internal record Product(int productId, string productName);
     public class ProductTest : IDisposable
     {
         private readonly HttpClient _httpClient = new()
         {
-            BaseAddress = new Uri("https://localhost:7133")
+            BaseAddress = new Uri("https://localhost:7202/api/Product")
         };
 
         public void Dispose()
         {
-            _httpClient.DeleteAsync("/state").GetAwaiter().GetResult();
+            _httpClient.DeleteAsync("/deleteproduct?Id=1").GetAwaiter().GetResult();
         }
 
         [Fact]
-        public async Task GivenARequest_WhenCallingGetBooks_ThenTheAPIReturnsExpectedResponse()
+        public async Task GivenARequest_WhenCallingGetProduct_ThenTheAPIReturnsExpectedResponse()
         {
             // Arrange.
             var expectedStatusCode = System.Net.HttpStatusCode.OK;
             var expectedContent = new[]
             {
-            new Book(1, "Awesome book #1"),
-            new Book(2, "Awesome book #2"),
-            new Book(3, "Awesome book #3"),
-            new Book(4, "Awesome book #4"),
-            new Book(5, "Awesome book #5")
+            new Product(1, "Araba #1"),
+            new Product(2, "Araba #2"),
+            new Product(3, "Araba  #3"),
+            new Product(4, "Araba  #4"),
+            new Product(5, "Araba #5")
         };
             var stopwatch = Stopwatch.StartNew();
 
             // Act.
-            var response = await _httpClient.GetAsync("/books");
+            var response = await _httpClient.GetAsync("/productlist");
 
             // Assert.
             await TestHelpers.AssertResponseWithContentAsync(stopwatch, response, expectedStatusCode, expectedContent);
         }
 
+        [Fact]
+        public async Task GivenARequest_WhenCallingPostProduct_ThenTheAPIReturnsExpectedResponseAndAddsBook()
+        {
+            // Arrange.
+            var expectedStatusCode = System.Net.HttpStatusCode.Created;
+            var expectedContent = new Product(6, "product");
+            var stopwatch = Stopwatch.StartNew();
+
+            // Act.
+            var response = await _httpClient.PostAsync("/addproduct", TestHelpers.GetJsonStringContent(expectedContent));
+
+            // Assert.
+            await TestHelpers.AssertResponseWithContentAsync(stopwatch, response, expectedStatusCode, expectedContent);
+        }
+
+        [Fact]
+        public async Task GivenARequest_WhenCallingPutProduct_ThenTheAPIReturnsExpectedResponseAndUpdatesBook()
+        {
+            // Arrange.
+            var expectedStatusCode = System.Net.HttpStatusCode.NoContent;
+            var updateproduct = new Product(6, "Awesome book #6 - Updated");
+            var stopwatch = Stopwatch.StartNew();
+
+            // Act.
+            var response = await _httpClient.PutAsync("/updateproduct", TestHelpers.GetJsonStringContent(updateproduct));
+
+           // Assert.
+           //TestHelpers.AssertCommonResponseParts(stopwatch, response, expectedStatusCode);
+        }
+
         //[Fact]
-        //public async Task GivenARequest_WhenCallingPostBooks_ThenTheAPIReturnsExpectedResponseAndAddsBook()
-        //{
-        //    // Arrange.
-        //    var expectedStatusCode = System.Net.HttpStatusCode.Created;
-        //    var expectedContent = new Book(6, "Awesome book #6");
-        //    var stopwatch = Stopwatch.StartNew();
-
-        //    // Act.
-        //    var response = await _httpClient.PostAsync("/books", TestHelpers.GetJsonStringContent(expectedContent));
-
-        //    // Assert.
-        //    await TestHelpers.AssertResponseWithContentAsync(stopwatch, response, expectedStatusCode, expectedContent);
-        //}
-
-        //[Fact]
-        //public async Task GivenARequest_WhenCallingPutBooks_ThenTheAPIReturnsExpectedResponseAndUpdatesBook()
-        //{
-        //    // Arrange.
-        //    var expectedStatusCode = System.Net.HttpStatusCode.NoContent;
-        //    var updatedBook = new Book(6, "Awesome book #6 - Updated");
-        //    var stopwatch = Stopwatch.StartNew();
-
-        //    // Act.
-        //    var response = await _httpClient.PutAsync("/books", TestHelpers.GetJsonStringContent(updatedBook));
-
-        //    // Assert.
-        //    TestHelpers.AssertCommonResponseParts(stopwatch, response, expectedStatusCode);
-        //}
-
-        //[Fact]
-        //public async Task GivenARequest_WhenCallingDeleteBooks_ThenTheAPIReturnsExpectedResponseAndDeletesBook()
+        //public async Task GivenARequest_WhenCallingDeleteProduct_ThenTheAPIReturnsExpectedResponseAndDeletesBook()
         //{
         //    // Arrange.
         //    var expectedStatusCode = System.Net.HttpStatusCode.NoContent;
@@ -82,28 +82,28 @@ namespace rapidmq_as.net_core_6E.mq.Tests
         //    var stopwatch = Stopwatch.StartNew();
 
         //    // Act.
-        //    var response = await _httpClient.DeleteAsync($"/books/{bookIdToDelete}");
+        //    var response = await _httpClient.DeleteAsync($"/deleteproduct?Id=1");
 
         //    // Assert.
         //    TestHelpers.AssertCommonResponseParts(stopwatch, response, expectedStatusCode);
         //}
 
-        //[Fact]
-        //public async Task GivenAnAuthenticatedRequest_WhenCallingAdmin_ThenTheAPIReturnsExpectedResponse()
-        //{
-        //    // Arrange.
-        //    var expectedStatusCode = System.Net.HttpStatusCode.OK;
-        //    var expectedContent = "Hi admin!";
-        //    var stopwatch = Stopwatch.StartNew();
-        //    var request = new HttpRequestMessage(HttpMethod.Get, "/admin");
-        //    request.Headers.Add("X-Api-Key", "SuperSecretApiKey");
+        [Fact]
+        public async Task GivenAnAuthenticatedRequest_WhenCallingAdmin_ThenTheAPIReturnsExpectedResponse()
+        {
+            // Arrange.
+            var expectedStatusCode = System.Net.HttpStatusCode.OK;
+            var expectedContent = "Hi admin!";
+            var stopwatch = Stopwatch.StartNew();
+            var request = new HttpRequestMessage(HttpMethod.Get, "/admin");
+            request.Headers.Add("X-Api-Key", "SuperSecretApiKey");
 
-        //    // Act.
-        //    var response = await _httpClient.SendAsync(request);
+            // Act.
+            var response = await _httpClient.SendAsync(request);
 
-        //    // Assert.
-        //    await TestHelpers.AssertResponseWithContentAsync(stopwatch, response, expectedStatusCode, expectedContent);
-        //}
+            // Assert.
+            await TestHelpers.AssertResponseWithContentAsync(stopwatch, response, expectedStatusCode, expectedContent);
+        }
 
         [Theory]
         [InlineData(null)]

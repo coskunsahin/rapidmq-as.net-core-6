@@ -11,7 +11,7 @@ using PsssD;
 namespace PsssD.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20221225175208_intial")]
+    [Migration("20230105174212_intial")]
     partial class intial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
